@@ -19,10 +19,7 @@ local options = require "mp.options"
 
 -- 读取选项。滤镜/着色器字段与 contextmenu_gui.conf 保持一致，
 -- 便于直接把旧配置内容复制过来。
-local opt = {
-    bind_key = "MBTN_MID",
-    bind_key_loaded = "",
-}
+local opt = {}
 
 for i = 1, 10 do
     local k = string.format("%02d", i)
@@ -77,7 +74,6 @@ local function build(list)
                 out[#out + 1] = {
                     type = "submenu",
                     title = eval(item[2]),
-                    shortcut = eval(item[3]) or "",
                     submenu = build(sub),
                 }
             end
@@ -96,7 +92,6 @@ local function build(list)
                 -- command 必须存在；空命令的条目在 mpv 里会被当作子菜单，
                 -- 所以这里保证至少是 "ignore"。
                 cmd = to_command(item[4]) or "ignore",
-                shortcut = eval(item[3]) or "",
                 state = state,
             }
         end
@@ -123,13 +118,6 @@ end
 menu.show_hook = show
 
 mp.register_script_message("show", show)
-
-if opt.bind_key ~= "" then
-    mp.add_forced_key_binding(opt.bind_key, "show", show)
-end
-if opt.bind_key_loaded ~= "" then
-    mp.add_forced_key_binding(opt.bind_key_loaded, "show-loaded", show, { repeatable = false })
-end
 
 mp.register_event("file-loaded", function()
     menu.loaded = true

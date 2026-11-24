@@ -188,6 +188,16 @@ def main():
         scan(data)
         check("含勾选状态节点", len(checked) > 0, "例如: %s" % (checked[:3],))
 
+        def has_shortcut(nodes):
+            for n in nodes or []:
+                if "shortcut" in n:
+                    return True
+                if n.get("type") == "submenu" and has_shortcut(n.get("submenu")):
+                    return True
+            return False
+
+        check("菜单项无快捷键文本", not has_shortcut(data))
+
         ipc.send("context-menu")
         time.sleep(1.2)
         menus = windows_of(proc.pid, "#32768")
@@ -211,8 +221,7 @@ def main():
                 log_text = f.read()
         check("无 Lua 错误", "Lua error" not in log_text and "[contextmenu_native] 构建菜单失败" not in log_text)
         check("脚本已加载", "contextmenu_native" in log_text)
-        check("已绑定 MBTN_MID",
-              "MBTN_MID nonscalable script-binding contextmenu_native/show" in log_text)
+        check("脚本未自行绑定按键", "input_contextmenu_native" not in log_text)
 
         ipc.send("quit")
         time.sleep(0.5)

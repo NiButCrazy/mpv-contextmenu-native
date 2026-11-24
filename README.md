@@ -43,14 +43,13 @@ mpv/
 mpv --script="E:/MyCode/Scripts/mpv-contextmenu-native/scripts/contextmenu_native"
 ```
 
-默认鼠标中键弹出菜单（`bind_key=MBTN_MID`）。
-
-如果同时装着 `contextmenu_gui`，两者都会响应中键。临时试用时改用右键即可避开：
+**按键在 `input.conf` 中配置**，脚本自身不绑定任何键：
 
 ```
-mpv --script-opts=contextmenu_native-bind_key=MBTN_RIGHT ^
-    --script="E:/MyCode/Scripts/mpv-contextmenu-native/scripts/contextmenu_native" 视频文件
+MBTN_MID	script-message-to contextmenu_native show
 ```
+
+如果同时装着 `contextmenu_gui`，请只保留其中一条绑定。
 
 注意：**鼠标必须停在视频窗口内**，否则 mpv 不会弹出菜单（见「已知限制」）。
 
@@ -60,7 +59,6 @@ mpv --script-opts=contextmenu_native-bind_key=MBTN_RIGHT ^
 
 | 键 | 默认 | 说明 |
 |---|---|---|
-| `bind_key` | `MBTN_MID` | 弹出菜单的按键；留空则只响应脚本消息 |
 | `filter01..10B/D/G` | 空 | 滤镜条目，字段与 `contextmenu_gui.conf` 一致 |
 | `shader01..10B/D/G` | 空 | 着色器条目，同上 |
 
@@ -85,7 +83,7 @@ script-message-to contextmenu_native show
 | DPI 缩放 | Tk 处理 | 系统处理 |
 | 动态状态（勾选/禁用） | 每次弹出求值 | 每次弹出重建 `menu-data`，等效 |
 | 命令为 Lua 函数 | 直接调用 | 转成 `script-message` 回调 |
-| 与 OSC 抢中键 | 普通绑定，会被 OSC 吃掉 | forced 绑定，可覆盖 OSC |
+| 按键绑定 | 脚本内 `add_key_binding` | 只在 `input.conf` 配置 |
 
 ## 已知限制
 
@@ -96,11 +94,7 @@ script-message-to contextmenu_native show
 3. 原生菜单没有 `postcascade`，`G=yes` 的条目执行后重新弹出会回到顶层菜单。
 4. 没有项目符号/图标的自定义能力。
 5. `cmd` 必须是字符串，函数型命令通过 `script-message-to contextmenu_native invoke <id>` 间接执行。
-6. **会覆盖现代 OSC 的中键绑定**。`modernz.lua`、`uosc` 等用
-   `mp.set_key_bindings(..., "input", "force")` 强占 `mbtn_left/right/mid`，
-   普通绑定会被吃掉。本项目用 `mp.add_forced_key_binding` 注册，同样属于
-   forced 优先级，因此能覆盖它们；代价是这些 OSC 在控件上原本的中键行为
-   （如 `modernz` 的 `title_mbtn_mid_command`）不再生效。
+6. 菜单项不再显示快捷键文本（`menu-data` 的 `shortcut` 字段留空）。
 
 ## 验证
 
@@ -113,4 +107,4 @@ python tests/verify.py
 - 脚本加载无 Lua 错误
 - `menu-data` 结构（子菜单、分隔线、动态播放列表、勾选状态）
 - 原生菜单窗口（类名 `#32768`）确实弹出并能关闭
-- `MBTN_MID` 绑定已注册
+- 脚本不注册按键绑定（按键由 `input.conf` 提供）
