@@ -1,2 +1,2 @@
 *.glsl linguist-detectable=false
-*.vpy linguist-detectable=true
+*.vpy linguist-detectable=false
