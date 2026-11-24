@@ -1,5 +1,7 @@
 # mpv-contextmenu-native
 
+![菜单预览](docs/menu.png)
+
 基于 **mpv 原生菜单 API**（`menu-data` 属性 + `context-menu` 命令）的上下文菜单，
 不启动任何子进程，**不需要 tclsh / Tk**。
 
@@ -49,7 +51,7 @@ mpv --script="E:/MyCode/Scripts/mpv-contextmenu-native/scripts/contextmenu_nativ
 **按键在 `input.conf` 中配置**，脚本自身不绑定任何键：
 
 ```
-MBTN_MID	script-message-to contextmenu_native show
+MBTN_RIGHT	script-message-to contextmenu_native show
 ```
 
 如果同时装着 `contextmenu_gui`，请只保留其中一条绑定。
