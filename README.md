@@ -59,6 +59,7 @@ MBTN_MID	script-message-to contextmenu_native show
 
 | 键 | 默认 | 说明 |
 |---|---|---|
+| `show_shortcut` | `no` | 是否在菜单项右侧显示快捷键文本；`yes` 时使用菜单定义里的快捷键 |
 | `filter01..10B/D/G` | 空 | 滤镜条目，字段与 `contextmenu_gui.conf` 一致 |
 | `shader01..10B/D/G` | 空 | 着色器条目，同上 |
 
@@ -94,7 +95,7 @@ script-message-to contextmenu_native show
 3. 原生菜单没有 `postcascade`，`G=yes` 的条目执行后重新弹出会回到顶层菜单。
 4. 没有项目符号/图标的自定义能力。
 5. `cmd` 必须是字符串，函数型命令通过 `script-message-to contextmenu_native invoke <id>` 间接执行。
-6. 菜单项不再显示快捷键文本（`menu-data` 的 `shortcut` 字段留空）。
+6. 菜单项右侧默认不显示快捷键文本，由 `show_shortcut` 控制；子菜单条目不会有快捷键文本。
 
 ## 验证
 

@@ -19,7 +19,10 @@ local options = require "mp.options"
 
 -- 读取选项。滤镜/着色器字段与 contextmenu_gui.conf 保持一致，
 -- 便于直接把旧配置内容复制过来。
-local opt = {}
+local opt = {
+    -- 是否在菜单项右侧显示快捷键文本，由用户在 conf 里决定
+    show_shortcut = false,
+}
 
 for i = 1, 10 do
     local k = string.format("%02d", i)
@@ -94,6 +97,14 @@ local function build(list)
                 cmd = to_command(item[4]) or "ignore",
                 state = state,
             }
+
+            -- 只有普通条目有加速键；子菜单的第三字段是子菜单名，不能显示。
+            if opt.show_shortcut then
+                local accel = eval(item[3])
+                if accel and accel ~= "" then
+                    out[#out].shortcut = accel
+                end
+            end
         end
     end
 
