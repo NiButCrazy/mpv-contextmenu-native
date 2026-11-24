@@ -1,6 +1,9 @@
 --[[
     contextmenu_native —— 基于 mpv 原生菜单 API 的上下文菜单。
 
+    作者：NiButCrazy
+    仓库：https://github.com/NiButCrazy/mpv-contextmenu-native
+
     依赖 mpv >= 0.42：
       - menu-data 属性（menu definition data）
       - context-menu 命令（Windows 上由 w32 VO 用 CreatePopupMenu/TrackPopupMenuEx 渲染）

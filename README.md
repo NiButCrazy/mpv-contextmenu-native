@@ -1,5 +1,7 @@
 # mpv-contextmenu-native
 
+作者：[NiButCrazy](https://github.com/NiButCrazy) · 仓库：<https://github.com/NiButCrazy/mpv-contextmenu-native>
+
 ![菜单预览](docs/menu.png)
 
 基于 **mpv 原生菜单 API**（`menu-data` 属性 + `context-menu` 命令）的上下文菜单，

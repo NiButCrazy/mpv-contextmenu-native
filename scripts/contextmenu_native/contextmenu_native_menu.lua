@@ -1,6 +1,9 @@
 --[[
     contextmenu_native 的菜单定义。
 
+    作者：NiButCrazy
+    仓库：https://github.com/NiButCrazy/mpv-contextmenu-native
+
     条目格式（与 contextmenu_gui 保持兼容）：
         {类型, 标签, 加速键, 命令, 状态, 是否禁用}
 
