@@ -45,6 +45,15 @@ mpv --script="E:/MyCode/Scripts/mpv-contextmenu-native/scripts/contextmenu_nativ
 
 默认鼠标中键弹出菜单（`bind_key=MBTN_MID`）。
 
+如果同时装着 `contextmenu_gui`，两者都会响应中键。临时试用时改用右键即可避开：
+
+```
+mpv --script-opts=contextmenu_native-bind_key=MBTN_RIGHT ^
+    --script="E:/MyCode/Scripts/mpv-contextmenu-native/scripts/contextmenu_native" 视频文件
+```
+
+注意：**鼠标必须停在视频窗口内**，否则 mpv 不会弹出菜单（见「已知限制」）。
+
 ## 配置
 
 `script-opts/contextmenu_native.conf`：
