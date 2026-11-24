@@ -38,6 +38,34 @@ local function prop(name)
     return mp.get_property_native(name)
 end
 
+-- load_plus 是否可用。
+-- 注意：load_plus 用 mp.add_key_binding(nil, ...) 注册，这类无键绑定
+-- 不会出现在 input-bindings 属性里，所以只能检测脚本本身是否加载。
+local function has_load_plus()
+    if mp.find_config_file("scripts/load_plus.lua") then
+        return true
+    end
+    for _, path in ipairs(mp.get_property_native("scripts") or {}) do
+        if path:find("load_plus", 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
+-- load_plus 未安装时，条目自动变灰并提示
+local function lp_label(text)
+    return function()
+        return has_load_plus() and text or (text .. "（需 load_plus）")
+    end
+end
+
+local function lp_disabled()
+    return function()
+        return not has_load_plus()
+    end
+end
+
 -- 播放列表：当前项勾选
 local function playlist_items()
     local out = {}
@@ -179,8 +207,15 @@ function M.refresh(opt)
     end
 
     defs.open_menu = {
-        {COMMAND, "打开文件…（需 load_plus）", "", "script-binding load_plus/import_files", "", true},
-        {COMMAND, "打开地址…（需 load_plus）", "", "script-binding load_plus/import_url", "", true},
+        {COMMAND, lp_label("打开文件…"),
+         "", "script-binding load_plus/import_files", "", lp_disabled()},
+        {COMMAND, lp_label("打开地址…"),
+         "", "script-binding load_plus/import_url", "", lp_disabled()},
+        SEP,
+        {COMMAND, lp_label("追加音轨…"),
+         "", "script-binding load_plus/append_aid", "", lp_disabled()},
+        {COMMAND, lp_label("追加字幕…"),
+         "", "script-binding load_plus/append_sid", "", lp_disabled()},
         SEP,
         {CASCADE, "播放列表", "playlist_menu"},
         {COMMAND, "上一个文件", "", "playlist-prev", "", false},
@@ -256,8 +291,8 @@ function M.refresh(opt)
         {COMMAND, "字幕延迟 +0.1s", "", "add sub-delay 0.1", "", false},
         {COMMAND, "字幕延迟 -0.1s", "", "add sub-delay -0.1", "", false},
         SEP,
-        {COMMAND, "加载字幕文件…（需 load_plus）", "",
-         "script-binding load_plus/import_sub", "", true},
+        {COMMAND, lp_label("加载字幕文件…"),
+         "", "script-binding load_plus/append_sid", "", lp_disabled()},
     }
 
     defs.filter_menu = configured_items(opt, "filter")
