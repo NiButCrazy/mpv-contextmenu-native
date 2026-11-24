@@ -7,6 +7,9 @@
 
     与 contextmenu_gui 的区别：不启动任何子进程，不需要 tclsh/Tk。
 
+    对照参考（上游 contextmenu_gui 源码）：
+        https://github.com/A-Archives-and-Forks/MPV_lazy/tree/main/portable_config/scripts/contextmenu_gui
+
     菜单定义见同目录 contextmenu_native_menu.lua。
     条目格式与 contextmenu_gui 兼容：
         {类型, 标签, 加速键(仅显示), 命令, 状态, 是否禁用}

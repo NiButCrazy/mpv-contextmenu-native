@@ -5,6 +5,9 @@
 
 是 [`contextmenu_gui`](https://github.com/Carmanaught/mpv-contextmenu_gui) 的替代实现。
 
+菜单条目与本项目的配置字段对照 MPV_lazy 上游：
+<https://github.com/A-Archives-and-Forks/MPV_lazy/tree/main/portable_config/scripts/contextmenu_gui>
+
 ## 原理
 
 ```

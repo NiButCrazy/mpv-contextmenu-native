@@ -13,6 +13,9 @@
 
     标签、加速键、状态、禁用都可以写成函数，每次打开菜单时求值，
     因此动态内容（播放列表、轨道、章节）无需额外机制。
+
+    菜单条目对照上游 contextmenu_gui/main.lua：
+        https://github.com/A-Archives-and-Forks/MPV_lazy/tree/main/portable_config/scripts/contextmenu_gui
 --]]
 
 local mp = require "mp"
