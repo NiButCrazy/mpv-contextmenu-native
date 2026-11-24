@@ -32,7 +32,7 @@ Lua 构建菜单树
 
 ## 安装
 
-把两个目录复制到 mpv 配置目录：
+把以下内容复制到 mpv 配置目录：
 
 ```
 mpv/
@@ -40,9 +40,14 @@ mpv/
 │   └── contextmenu_native/
 │       ├── main.lua
 │       └── contextmenu_native_menu.lua
-└── script-opts/
-    └── contextmenu_native.conf
+├── script-opts/
+│   └── contextmenu_native.conf
+├── shaders/          # 可选：着色器条目用到的 glsl
+└── vs/               # 可选：滤镜条目用到的 VapourSynth 脚本
 ```
+
+`shaders/` 和 `vs/` 只在需要用到对应的滤镜/着色器条目时才要复制；
+菜单里的命令用的是 `~~/shaders/...` 与 `~~/vs/...` 这类相对 mpv 配置目录的路径。
 
 或者用命令行加载本仓库而不复制：
 
