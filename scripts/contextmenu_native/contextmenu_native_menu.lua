@@ -180,6 +180,7 @@ function M.refresh(opt)
 
     defs.open_menu = {
         {COMMAND, "打开文件…", "", "script-binding load_plus/import_files", "", false},
+        {COMMAND, "打开文件夹…", "", function() M.load_folder() end, "", false},
         {COMMAND, "打开地址…", "", "script-binding load_plus/import_url", "", false},
         SEP,
         {COMMAND, "追加音轨…", "", "script-binding load_plus/append_aid", "", false},

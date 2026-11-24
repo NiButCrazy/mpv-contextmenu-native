@@ -22,6 +22,20 @@
 
 local mp = require "mp"
 local options = require "mp.options"
+local utils = require "mp.utils"
+
+-- 加载文件夹时收录的扩展名
+local MEDIA_EXT = {
+    -- 视频
+    mkv = true, mp4 = true, m4v = true, avi = true, mov = true, wmv = true,
+    flv = true, webm = true, ts = true, m2ts = true, mpg = true, mpeg = true,
+    ogv = true, rmvb = true, rm = true, asf = true, ["3gp"] = true, ["3g2"] = true,
+    vob = true, y4m = true, amv = true, f4v = true,
+    -- 音频
+    mp3 = true, flac = true, wav = true, m4a = true, aac = true, ogg = true,
+    opus = true, wma = true, ape = true, alac = true, aiff = true, tta = true,
+    tak = true, dsf = true, wv = true, oga = true, ogm = true,
+}
 
 -- 读取选项。滤镜/着色器字段与 contextmenu_gui.conf 保持一致，
 -- 便于直接把旧配置内容复制过来。
@@ -147,6 +161,68 @@ mp.register_script_message("play-pause", play_pause)
 
 -- 供菜单模块调用
 menu.play_pause = play_pause
+
+-- 弹出文件夹选择框，取消返回 nil
+local function pick_folder()
+    local res = utils.subprocess({
+        args = {'powershell', '-NoProfile', '-Command', [[& {
+            Trap { Write-Error -ErrorRecord $_; Exit 1 }
+            Add-Type -AssemblyName System.Windows.Forms
+            $u8 = [System.Text.Encoding]::UTF8
+            $out = [Console]::OpenStandardOutput()
+            $dlg = New-Object System.Windows.Forms.FolderBrowserDialog
+            $dlg.Description = "选择文件夹"
+            $dlg.ShowNewFolderButton = $false
+            If ($dlg.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+                $b = $u8.GetBytes($dlg.SelectedPath)
+                $out.Write($b, 0, $b.Length)
+            }
+        }]]},
+        cancellable = false,
+    })
+    if not res or res.status ~= 0 then return nil end
+    local path = (res.stdout or ""):match("^%s*(.-)%s*$")
+    if path == "" then return nil end
+    return path
+end
+
+-- 把文件夹里的音视频加入播放列表。path 为空时弹出选择框。
+-- 也可以用脚本消息直接指定目录：
+--   script-message-to contextmenu_native load-folder "D:\Videos"
+local function load_folder(path)
+    if not path or path == "" then
+        path = pick_folder()
+    end
+    if not path then return end
+
+    local entries = utils.readdir(path, "files")
+    if not entries then
+        mp.osd_message("无法读取文件夹：" .. path, 3)
+        return
+    end
+
+    local files = {}
+    for _, name in ipairs(entries) do
+        local ext = name:match("%.([^%.]+)$")
+        if ext and MEDIA_EXT[ext:lower()] then
+            files[#files + 1] = utils.join_path(path, name)
+        end
+    end
+    table.sort(files)
+
+    if #files == 0 then
+        mp.osd_message("文件夹里没有可识别的音视频文件", 3)
+        return
+    end
+
+    for i, file in ipairs(files) do
+        mp.commandv("loadfile", file, i == 1 and "replace" or "append")
+    end
+    mp.osd_message(("已加载 %d 个文件"):format(#files), 2)
+end
+
+mp.register_script_message("load-folder", load_folder)
+menu.load_folder = load_folder
 
 -- 供菜单模块在 G=yes 的条目执行后重新弹出菜单使用。
 menu.show_hook = show
