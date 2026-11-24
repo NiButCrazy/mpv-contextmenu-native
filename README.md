@@ -85,6 +85,7 @@ script-message-to contextmenu_native show
 | DPI 缩放 | Tk 处理 | 系统处理 |
 | 动态状态（勾选/禁用） | 每次弹出求值 | 每次弹出重建 `menu-data`，等效 |
 | 命令为 Lua 函数 | 直接调用 | 转成 `script-message` 回调 |
+| 与 OSC 抢中键 | 普通绑定，会被 OSC 吃掉 | forced 绑定，可覆盖 OSC |
 
 ## 已知限制
 
@@ -95,6 +96,11 @@ script-message-to contextmenu_native show
 3. 原生菜单没有 `postcascade`，`G=yes` 的条目执行后重新弹出会回到顶层菜单。
 4. 没有项目符号/图标的自定义能力。
 5. `cmd` 必须是字符串，函数型命令通过 `script-message-to contextmenu_native invoke <id>` 间接执行。
+6. **会覆盖现代 OSC 的中键绑定**。`modernz.lua`、`uosc` 等用
+   `mp.set_key_bindings(..., "input", "force")` 强占 `mbtn_left/right/mid`，
+   普通绑定会被吃掉。本项目用 `mp.add_forced_key_binding` 注册，同样属于
+   forced 优先级，因此能覆盖它们；代价是这些 OSC 在控件上原本的中键行为
+   （如 `modernz` 的 `title_mbtn_mid_command`）不再生效。
 
 ## 验证
 

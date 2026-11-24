@@ -125,10 +125,10 @@ menu.show_hook = show
 mp.register_script_message("show", show)
 
 if opt.bind_key ~= "" then
-    mp.add_key_binding(opt.bind_key, "show", show)
+    mp.add_forced_key_binding(opt.bind_key, "show", show)
 end
 if opt.bind_key_loaded ~= "" then
-    mp.add_key_binding(opt.bind_key_loaded, "show-loaded", show, { repeatable = false })
+    mp.add_forced_key_binding(opt.bind_key_loaded, "show-loaded", show, { repeatable = false })
 end
 
 mp.register_event("file-loaded", function()
