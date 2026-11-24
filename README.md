@@ -7,7 +7,7 @@
 基于 **mpv 原生菜单 API**（`menu-data` 属性 + `context-menu` 命令）的上下文菜单，
 不启动任何子进程，**不需要 tclsh / Tk**。
 
-是 [`contextmenu_gui`](https://github.com/Carmanaught/mpv-contextmenu_gui) 的替代实现。
+是 [`contextmenu_gui`](https://github.com/carmanaught/mpvcontextmenu) 的替代实现。
 
 菜单条目与本项目的配置字段对照 MPV_lazy 上游：
 <https://github.com/A-Archives-and-Forks/MPV_lazy/tree/main/portable_config/scripts/contextmenu_gui>
