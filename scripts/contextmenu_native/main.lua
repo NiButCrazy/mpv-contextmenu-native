@@ -168,15 +168,26 @@ local function pick_folder()
         args = {'powershell', '-NoProfile', '-Command', [[& {
             Trap { Write-Error -ErrorRecord $_; Exit 1 }
             Add-Type -AssemblyName System.Windows.Forms
+            Add-Type -AssemblyName System.Drawing
             $u8 = [System.Text.Encoding]::UTF8
             $out = [Console]::OpenStandardOutput()
+            # 无 owner 的对话框在 mpv 子进程里会被创建在窗口后面，用置顶的隐藏窗体做 owner
+            $owner = New-Object System.Windows.Forms.Form
+            $owner.TopMost = $true
+            $owner.ShowInTaskbar = $false
+            $owner.FormBorderStyle = 'None'
+            $owner.StartPosition = 'Manual'
+            $owner.Size = New-Object System.Drawing.Size(1, 1)
+            $owner.Location = New-Object System.Drawing.Point(-2000, -2000)
+            $owner.Show()
             $dlg = New-Object System.Windows.Forms.FolderBrowserDialog
             $dlg.Description = "选择文件夹"
             $dlg.ShowNewFolderButton = $false
-            If ($dlg.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+            If ($dlg.ShowDialog($owner) -eq [System.Windows.Forms.DialogResult]::OK) {
                 $b = $u8.GetBytes($dlg.SelectedPath)
                 $out.Write($b, 0, $b.Length)
             }
+            $owner.Close()
         }]]},
         cancellable = false,
     })
