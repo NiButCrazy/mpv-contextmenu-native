@@ -1,4 +1,4 @@
 # 第三方着色器和 VapourSynth 脚本随附在仓库里，
 # 但不计入 GitHub 的语言统计（项目本身是 Lua）。
-*.glsl linguist-detectable=false
-*.vpy  linguist-detectable=false
+shaders/* linguist-vendored
+vs/* linguist-vendored
