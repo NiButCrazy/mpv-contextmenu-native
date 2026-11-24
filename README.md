@@ -84,6 +84,17 @@ MBTN_RIGHT	script-message-to contextmenu_native show
 script-message-to contextmenu_native show
 ```
 
+### 播放/暂停（带重播）
+
+`play-pause` 在 `keep-open` 停到结尾时会从头重新播放，其余情况等同于 `cycle pause`。
+脚本不绑定按键，需要的话自己在 `input.conf` 里加：
+
+```
+SPACE	script-message-to contextmenu_native play-pause
+```
+
+菜单里的「文件 → 播放/暂停」用的就是这个函数，播完会显示为「重新播放」。
+
 ## 与 contextmenu_gui 的差异
 
 | | contextmenu_gui | 本项目 |

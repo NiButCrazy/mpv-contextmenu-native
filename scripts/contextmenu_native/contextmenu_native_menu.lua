@@ -195,7 +195,9 @@ function M.refresh(opt)
     }
 
     defs.file_menu = {
-        {CHECK, "播放/暂停", "space", "cycle pause", function() return prop("pause") end, false},
+        {CHECK, function() return prop("eof-reached") and "重新播放" or "播放/暂停" end,
+         "space", function() M.play_pause() end,
+         function() return prop("pause") end, false},
         {COMMAND, "停止", "", "stop", "", false},
         SEP,
         {CHECK, "显示进度条", "", "cycle-values osd-level 3 1",
